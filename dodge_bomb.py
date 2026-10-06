@@ -5,7 +5,6 @@ import time
 import pygame as pg
 
 
-
 WIDTH, HEIGHT = 1100, 650
 DELTA = {
     pg.K_UP: (0, -5), 
@@ -30,7 +29,7 @@ def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
-def gameover(screen: pg.Surface) -> None:
+def gameover(screen: pg.Surface) -> None:  #演習問題1: ゲームオーバー画面
     """
     引数: Surface
     戻り値: なし
