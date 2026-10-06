@@ -55,6 +55,22 @@ def gameover(screen: pg.Surface) -> None:  #演習問題1: ゲームオーバー
     time.sleep(5)
 
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """
+    引数: なし
+    戻り値: 爆弾のSurfaceリストと、加速度のリスト
+    拡大、加速の10段階程度のリストを用意する関数
+    """
+    bb_imgs = []  # 爆弾リスト
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r))
+        pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        bb_img.set_colorkey((0, 0, 0))  # 四隅の黒い部分を透過
+        bb_imgs.append(bb_img)
+    bb_accs = [a for a in range(1, 11)]  # 爆弾速度リスト
+    return bb_imgs, bb_accs
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -71,6 +87,7 @@ def main():
     vx, vy = +5, +5  # 練習2: 爆弾の初期速度
     clock = pg.time.Clock()
     tmr = 0
+    bb_imgs, bb_accs = init_bb_imgs()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -81,6 +98,12 @@ def main():
             gameover(screen)  # 課題1: ゲームオーバー
             print("game over")
             return
+         # 演習2: 時間とともに爆弾が拡大、加速
+        avx = vx*bb_accs[min(tmr//500, 9)]
+        avy = vy*bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
+        bb_rct.width = bb_img.get_rect().width
+        bb_rct.height = bb_img.get_rect().height
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
@@ -100,8 +123,9 @@ def main():
         if check_bound(kk_rct) != (True, True):  # どこかしらはみ出ている
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  # 先ほどの動きをキャンセルする
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(vx, vy)  # 練習2: 爆弾を動かす
+        bb_rct.move_ip(avx, avy)  # 練習2: 爆弾を動かす
         yoko, tate = check_bound(bb_rct)
+        print(yoko, tate)
         if not yoko:  # yoko == False
             vx *= -1
         if not tate:
