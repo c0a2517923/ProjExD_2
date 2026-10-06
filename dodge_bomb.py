@@ -1,7 +1,9 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
+
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -28,6 +30,32 @@ def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+def gameover(screen: pg.Surface) -> None:
+    """
+    引数: Surface
+    戻り値: なし
+    GameOver画面の表示
+    """
+    gameover_screen = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(gameover_screen, (0, 0, 0), pg.Rect(0, 0, WIDTH, HEIGHT))  # 黒い矩形を作る
+    gameover_screen.set_alpha(200)  # 透明度の調節
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Game Over", True, (255, 255, 255))  # "Game Over"の白文字を作る
+    txt_rect = txt.get_rect()
+    txt_rect.center = WIDTH/2, HEIGHT/2  # txtの中心を揃えた
+    gameover_screen.blit(txt, txt_rect)
+    kk_img2 = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 1.5)  # こうかとんの画像読み込み
+    kk_rct_L = kk_img2.get_rect()
+    kk_rct_L.center = [WIDTH/4, HEIGHT/2]
+    gameover_screen.blit(kk_img2, kk_rct_L)  # 左側のこうかとん表示
+    kk_rct_R = kk_img2.get_rect()
+    kk_rct_R.center = [WIDTH/4*3, HEIGHT/2]
+    gameover_screen.blit(kk_img2, kk_rct_R)  # 右側のこうかとん表示
+    screen.blit(gameover_screen, (0, 0))  # Screenを表示
+    pg.display.update()
+    time.sleep(5)
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -51,6 +79,7 @@ def main():
         screen.blit(bg_img, [0, 0]) 
 
         if kk_rct.colliderect(bb_rct):  # kkとbbのrectが重なっていたら
+            gameover(screen)  # 課題1: ゲームオーバー
             print("game over")
             return
 
