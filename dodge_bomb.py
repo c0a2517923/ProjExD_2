@@ -38,11 +38,13 @@ def gameover(screen: pg.Surface) -> None:  #演習問題1: ゲームオーバー
     gameover_screen = pg.Surface((WIDTH, HEIGHT))
     pg.draw.rect(gameover_screen, (0, 0, 0), pg.Rect(0, 0, WIDTH, HEIGHT))  # 黒い矩形を作る
     gameover_screen.set_alpha(200)  # 透明度の調節
+
     fonto = pg.font.Font(None, 80)
     txt = fonto.render("Game Over", True, (255, 255, 255))  # "Game Over"の白文字を作る
     txt_rect = txt.get_rect()
     txt_rect.center = WIDTH/2, HEIGHT/2  # txtの中心を揃えた
     gameover_screen.blit(txt, txt_rect)
+
     kk_img2 = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 1.5)  # こうかとんの画像読み込み
     kk_rct_L = kk_img2.get_rect()
     kk_rct_L.center = [WIDTH/4, HEIGHT/2]
@@ -50,6 +52,7 @@ def gameover(screen: pg.Surface) -> None:  #演習問題1: ゲームオーバー
     kk_rct_R = kk_img2.get_rect()
     kk_rct_R.center = [WIDTH/4*3, HEIGHT/2]
     gameover_screen.blit(kk_img2, kk_rct_R)  # 右側のこうかとん表示
+
     screen.blit(gameover_screen, (0, 0))  # Screenを表示
     pg.display.update()
     time.sleep(5)
@@ -88,6 +91,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     bb_imgs, bb_accs = init_bb_imgs()
+    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
